@@ -1,0 +1,23 @@
+version: '3'
+services:
+  zookeeper:
+    restart: always
+    image: zookeeper:3.3.6
+    ports:
+      - "2181:2181"
+    volumes:
+      - ./volumes/zookeeper/data:/data
+
+  kafka:
+    image: wurstmeister/kafka:0.11.0.0
+    restart: always
+    links:
+      - zookeeper:zookeeper
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./volumes/kafka:/kafka
+    env_file:
+      - kafka.env
